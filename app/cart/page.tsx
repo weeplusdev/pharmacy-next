@@ -1,4 +1,4 @@
-import { Header } from '@/components/header'
+//import { Header } from '@/components/header'
 import { BottomNav } from '@/components/bottom-nav'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
