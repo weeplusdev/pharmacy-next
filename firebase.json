@@ -26,5 +26,16 @@
       "port": 9000
     },
     "singleProjectMode": true
+  },
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
+    }
   }
 }

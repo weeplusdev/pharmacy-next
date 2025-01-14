@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "pharmacy-next2025"
-  }
+    "default": "pharmacy-next2025",
+    "pharnacy-next": "pharmacy-next-2025"
+  },
+  "targets": {},
+  "etags": {}
 }
