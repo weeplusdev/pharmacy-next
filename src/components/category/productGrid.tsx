@@ -11,15 +11,17 @@ interface ProductGridProps {
     type?: string
     subtype?: string
     product?: string
+    products: Product[];  // เพิ่ม products ที่เป็น required
 }
 
-export function ProductGrid({ type, subtype, product }: ProductGridProps) {
-    const filteredProducts = products.filter(p => {
-        if (product) return p.productId === product
-        if (subtype) return p.subtype === subtype
-        if (type) return p.type === type
-        return true
-      })
+export function ProductGrid({ type, subtype, product, products }: ProductGridProps) {
+    if (!products.length) {
+        return (
+          <div className="text-center py-12">
+            <p className="text-gray-500">ไม่พบสินค้าในหมวดหมู่นี้</p>
+          </div>
+        )
+      }
   
      
     return (
@@ -38,9 +40,8 @@ export function ProductGrid({ type, subtype, product }: ProductGridProps) {
             <option>สินค้าใหม่</option>
           </select>
         </div>
-  
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
+          {products.map((product: Product) => (
             <div key={product.id} className="bg-white rounded-lg shadow">
               <div className="p-4">
                 <img 
