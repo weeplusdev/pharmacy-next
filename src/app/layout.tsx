@@ -35,7 +35,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {isLiff ? (
-          <LiffProvider liffId="1234567890">
+          <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_CATEGORIES!}>
             <ClientLayout>
               {children}
             </ClientLayout>
