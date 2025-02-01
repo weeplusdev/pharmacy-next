@@ -3,19 +3,22 @@ import { PopularProducts } from '@/components/home/PopularProducts'
 import { SpecialOffers } from '@/components/home/SpecialOffers'
 import { CategorySidebar } from '@/components/category/CategorySidebar'
 import { ProductGrid } from '@/components/category/productGrid'
+import { getProducts } from '@/utils/category'
 import { Suspense } from 'react'
 
-interface SearchParams {
-    type?: string
-    subtype?: string
-    product?: string
+interface PageProps {
+    params: { slug: string }
+    searchParams: {
+      type?: string
+      subtype?: string
+      product?: string
+    }
   }
 
-export default function CategoryPage({
+  export default async function CategoryPage({
     searchParams
-  }: {
-    searchParams: SearchParams
-  }) {
+  }: PageProps) {
+    const products = await getProducts(searchParams)
 
   return (
     <div className="container mx-auto px-4 py-8">

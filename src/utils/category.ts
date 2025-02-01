@@ -1,3 +1,12 @@
+import { products } from '@/data/products'
+
+
+interface SearchParamsType {
+    type?: string
+    subtype?: string
+    product?: string
+  }
+
 // Object สำหรับเก็บชื่อหมวดหมู่หลัก
 const categoryTitles: Record<string, string> = {
     'medicine': 'ยา',
@@ -91,4 +100,22 @@ const categoryTitles: Record<string, string> = {
       default:
         return []
     }
+  }
+
+  export async function getProducts(params: SearchParamsType) {
+    const { type, subtype, product } = params
+  
+    // จำลองการดึงข้อมูลแบบ async
+    return new Promise((resolve) => {
+      // จำลอง delay เพื่อให้เห็น loading
+      setTimeout(() => {
+        const filteredProducts = products.filter(p => {
+          if (product) return p.productId === product
+          if (subtype) return p.subtype === subtype
+          if (type) return p.type === type
+          return true
+        })
+        resolve(filteredProducts)
+      }, 500)
+    })
   }
