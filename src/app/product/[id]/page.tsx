@@ -88,7 +88,9 @@ export default function ProductDetailPage() {
 
   // Find related products
   const relatedProducts = product.relatedProducts
-    ? product.relatedProducts.map(id => mockProducts.find(p => p.id === id)).filter(Boolean)
+    ? product.relatedProducts
+        .map(id => mockProducts.find(p => p.id === id))
+        .filter((p): p is typeof mockProducts[0] => p !== undefined)
     : []
   
   return (
