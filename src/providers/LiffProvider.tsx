@@ -1,7 +1,7 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { Liff } from '@line/liff'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import liff from '@line/liff'
 import Loading from '@/components/shared/Loading'
 
 // กำหนด interface สำหรับ LINE Profile
@@ -14,58 +14,66 @@ interface LiffProfile {
 }
 
 interface LiffContextType {
-  liff: Liff | null
+  liff: typeof liff | null
   isLoggedIn: boolean
-  profile: LiffProfile | null
-  isReady: boolean
+  profile: any | null
+  isLoading: boolean
+  error: Error | null
 }
 
-const LiffContext = createContext<LiffContextType>({
-  liff: null,
-  isLoggedIn: false,
-  profile: null,
-  isReady: false,
-})
+const LiffContext = createContext<LiffContextType | undefined>(undefined)
 
 export function LiffProvider({ 
-  children,
+  children, 
   liffId 
 }: { 
-  children: React.ReactNode
+  children: ReactNode
   liffId: string 
 }) {
-  const [liff, setLiff] = useState<Liff | null>(null)
+  const [liffObject, setLiffObject] = useState<typeof liff | null>(null)
+  const [profile, setProfile] = useState<any | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [profile, setProfile] = useState<LiffProfile | null>(null)
-  const [isReady, setIsReady] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    import('@line/liff').then(({ default: liff }) => {
-      liff.init({ 
-        liffId,
-        withLoginOnExternalBrowser: true
-      }).then(async () => {
-        setLiff(liff)
-        if (liff.isLoggedIn()) {
-          setIsLoggedIn(true)
-          try {
-            // ใช้ type assertion เพื่อให้ TypeScript รู้ว่าเป็น LiffProfile
-            const profile = await liff.getProfile() as LiffProfile
-            setProfile(profile)
-          } catch (error) {
-            console.error('Error getting LINE profile:', error)
-          }
+    // ฟังก์ชันสำหรับเริ่มต้น LIFF
+    const initializeLiff = async () => {
+      try {
+        // นำเข้า LIFF SDK
+        const liffModule = await import('@line/liff')
+        const liffObject = liffModule.default
+        
+        // เริ่มต้น LIFF
+        await liffObject.init({ liffId })
+        setLiffObject(liffObject)
+        
+        // ตรวจสอบสถานะการล็อกอิน
+        const loggedIn = liffObject.isLoggedIn()
+        setIsLoggedIn(loggedIn)
+        
+        // ถ้าล็อกอินแล้ว ดึงข้อมูลโปรไฟล์
+        if (loggedIn) {
+          const profile = await liffObject.getProfile()
+          setProfile(profile)
         }
-        setIsReady(true)
-      }).catch(err => {
-        console.error('LIFF initialization failed:', err)
-        setIsReady(true)
-      })
-    })
-
+      } catch (error) {
+        console.error('LIFF initialization failed:', error)
+        setError(error instanceof Error ? error : new Error('Failed to initialize LIFF'))
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    initializeLiff()
+    
     // Cleanup function
     return () => {
-      if (liff?.isLoggedIn()) {
+      // ทำความสะอาดเมื่อ component ถูก unmount
+      if (liffObject) {
+        // ไม่มีฟังก์ชัน cleanup อย่างเป็นทางการใน LIFF SDK
+        // แต่เราสามารถล้างสถานะได้
+        setLiffObject(null)
         setProfile(null)
         setIsLoggedIn(false)
       }
@@ -73,12 +81,18 @@ export function LiffProvider({
   }, [liffId])
 
   // ถ้ายังไม่พร้อมให้แสดง Loading
-  if (!isReady) {
+  if (isLoading) {
     return <Loading />
   }
 
   return (
-    <LiffContext.Provider value={{ liff, isLoggedIn, profile, isReady }}>
+    <LiffContext.Provider value={{ 
+      liff: liffObject, 
+      isLoggedIn, 
+      profile, 
+      isLoading, 
+      error 
+    }}>
       {children}
     </LiffContext.Provider>
   )

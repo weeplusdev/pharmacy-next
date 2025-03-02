@@ -12,7 +12,7 @@ import { Testimonials } from '@/components/home/Testimonials'
 import { Services } from '@/components/home/Services'
 import { DoctorSignup } from '@/components/home/DoctorSignup'
 
-export default function HomePage() {
+export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
     
@@ -21,9 +21,9 @@ export default function HomePage() {
         <Categories />
         <PopularProducts />
         <SpecialOffers />
+        <Services />
         <HealthTips />
         <Testimonials />
-        <Services />
         <DoctorSignup />
       </main>
     

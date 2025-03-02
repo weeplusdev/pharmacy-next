@@ -4,8 +4,9 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { LayoutProvider } from '@/contexts/LayoutContext'
 import { HeaderTop } from './HeaderTop'
-import { Navigation } from './Navigation/Navigation'
 import { Footer } from './Footer'
+import { Navbar } from './Navbar'
+import { Toaster } from '@/components/ui/sonner'
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -14,11 +15,11 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
-    if (!isLandingPage) return // ไม่ต้องทำงานในหน้าอื่น
-
     const controlHeaderTop = () => {
-      if (window.scrollY > lastScrollY) {
-        setShowHeaderTop(false)
+      if (window.scrollY > 100) {
+        if (window.scrollY > lastScrollY) {
+          setShowHeaderTop(false)
+        }
       } else {
         setShowHeaderTop(true)
       }
@@ -29,32 +30,18 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     return () => {
       window.removeEventListener('scroll', controlHeaderTop)
     }
-  }, [lastScrollY, isLandingPage])
+  }, [lastScrollY])
 
   return (
     <LayoutProvider>
-      <div className="min-h-screen">
-        {/* HeaderTop with animation only on landing page */}
-        {isLandingPage && (
-          <div 
-            className={`transform transition-transform duration-300 ${
-              showHeaderTop ? 'translate-y-0' : '-translate-y-full'
-            }`}
-          >
-            <HeaderTop />
-          </div>
-        )}
-        
-        {/* Navigation */}
-        <div className="sticky top-0 z-50">
-          <Navigation />
-        </div>
-
-        <main>
+      <div className="min-h-screen flex flex-col">
+        {showHeaderTop && <HeaderTop />}
+        <Navbar />
+        <main className="flex-grow">
           {children}
         </main>
-
         <Footer />
+        <Toaster />
       </div>
     </LayoutProvider>
   )
