@@ -7,7 +7,24 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 
 // Mock product data - in a real app, this would come from an API
-const mockProducts = [
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  subCategory: string;
+  description: string;
+  longDescription: string;
+  usage: string;
+  warning: string;
+  inStock: boolean;
+  rating: number;
+  reviewCount: number;
+  relatedProducts?: string[];
+}
+
+const mockProducts: Product[] = [
   {
     id: '1',
     name: 'พาราเซตามอล 500 มก.',
@@ -58,6 +75,30 @@ const mockProducts = [
   },
 ];
 
+// Type guard function
+function isProduct(product: any): product is Product {
+  return product && typeof product.id === 'string';
+}
+
+// Component สำหรับแสดงสินค้าที่เกี่ยวข้อง
+const RelatedProductCard = ({ product }: { product: Product }) => {
+  return (
+    <Link 
+      href={`/product/${product.id}`}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div className="h-48 bg-gray-100 flex items-center justify-center">
+        <span className="text-gray-500">รูปภาพสินค้า</span>
+      </div>
+      <div className="p-4">
+        <h3 className="font-semibold mb-1">{product.name}</h3>
+        <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+        <p className="text-green-600 font-bold">฿{product.price.toLocaleString()}</p>
+      </div>
+    </Link>
+  );
+};
+
 export default function ProductDetailPage() {
   const params = useParams()
   const productId = params.id as string
@@ -90,7 +131,7 @@ export default function ProductDetailPage() {
   const relatedProducts = product.relatedProducts
     ? product.relatedProducts
         .map(id => mockProducts.find(p => p.id === id))
-        .filter((p): p is typeof mockProducts[0] => p !== undefined)
+        .filter(isProduct)
     : []
   
   return (
@@ -369,20 +410,7 @@ export default function ProductDetailPage() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedProducts.map((relatedProduct) => (
-              <Link 
-                key={relatedProduct.id} 
-                href={`/product/${relatedProduct.id}`}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="h-48 bg-gray-100 flex items-center justify-center">
-                  <span className="text-gray-500">รูปภาพสินค้า</span>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold mb-1">{relatedProduct.name}</h3>
-                  <p className="text-gray-600 text-sm mb-2">{relatedProduct.description}</p>
-                  <p className="text-green-600 font-bold">฿{relatedProduct.price.toLocaleString()}</p>
-                </div>
-              </Link>
+              <RelatedProductCard key={relatedProduct.id} product={relatedProduct} />
             ))}
           </div>
         </div>
