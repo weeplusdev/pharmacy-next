@@ -47,17 +47,17 @@ export function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">
           เข้าสู่ระบบ
         </h2>
         <p className="mt-2 text-sm text-gray-600">
           หรือ{' '}
           <a 
             href="/register" 
-            className="font-medium text-blue-600 hover:text-blue-500"
+            className="font-medium text-green-600 hover:text-green-500"
           >
             ลงทะเบียนใช้งาน
           </a>
@@ -65,7 +65,7 @@ export function LoginForm() {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div>
           <label 
@@ -81,7 +81,8 @@ export function LoginForm() {
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              placeholder="example@email.com"
             />
           </div>
         </div>
@@ -101,7 +102,8 @@ export function LoginForm() {
               required
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              placeholder="กรุณากรอกรหัสผ่าน"
             />
           </div>
         </div>
@@ -110,18 +112,18 @@ export function LoginForm() {
         <div className="flex items-center justify-end">
           <a 
             href="/forgot-password" 
-            className="text-sm font-medium text-blue-600 hover:text-blue-500"
+            className="text-sm font-medium text-green-600 hover:text-green-500"
           >
             ลืมรหัสผ่าน?
           </a>
         </div>
 
         {/* Submit Button */}
-        <div>
+        <div className="pt-2">
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-300 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
           </button>
@@ -135,7 +137,7 @@ export function LoginForm() {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-50 text-gray-500">หรือเข้าสู่ระบบด้วย</span>
+            <span className="px-2 bg-white text-gray-500">หรือเข้าสู่ระบบด้วย</span>
           </div>
         </div>
       </div>
@@ -144,7 +146,7 @@ export function LoginForm() {
       <div className="mt-6">
         <button
           onClick={handleLineLogin}
-          className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="w-full flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
         >
           <div className="mr-2 h-5 w-5 relative">
             <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
